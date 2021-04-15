@@ -31,11 +31,13 @@ The [documentation of the BMS is still available for download](http://cleanpower
 
 The source code can be built with [PlatformIO](https://platformio.org/).
 
+For the production deployment consider commenting out  `DEBUG` mode. Debug mode prints internal statistics and voltage measurements on a serial console attached to PB2. (Leaving Debug mode enabled is OK, the firmware will be larger but still fit into an ATTiny45V with a few bytes of wiggle room).
+
 Install the firmware via an ISP, e. g. an ASPUSB.
 
 ### Fuse settings
 
-Set the fuses to `LFuse: 0x62`, `HFuse: 0xde`, `EFuse: 0xff`:
+Set the processor fuses to `LFuse: 0x62`, `HFuse: 0xde`, `EFuse: 0xff`:
 
 - brownout detection enabled at $V_{CC}$ = 1.8 V
 - internal clock 8 MHz, startup time PWRDOWN/RESET: 6 CK/14 CK + 64 ms
