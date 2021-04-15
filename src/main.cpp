@@ -49,14 +49,14 @@ const unsigned long calibration_voltage_software = 3200;
 
 // ONLY CHANGE THE BELOW VALUES IF YOU KNOW WHAT YOU ARE DOING
 // cell module voltage thresholds (in mV)
-const float c_LVoltage_engage    = 2900L;
-const float c_LVoltage_disengage = 3100L;
-const float c_HVoltage_engage    = 3600L;
-const float c_HVoltage_disengage = 3450L;
+const long c_LVoltage_engage    = 2900L;
+const long c_LVoltage_disengage = 3100L;
+const long c_HVoltage_engage    = 3600L;
+const long c_HVoltage_disengage = 3450L;
 
 // shunting thresholds
-const float c_ShuntVoltage_engage    = 3500L;
-const float c_ShuntVoltage_disengage = 3450L;
+const long c_ShuntVoltage_engage    = 3500L;
+const long c_ShuntVoltage_disengage = 3450L;
 
 // number of voltage measurements to average
 const byte c_MovingAverageWindow = 5;
