@@ -1,0 +1,357 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "House Power BMS Cell Module (reverse engineered)"
+Date ""
+Rev "v0.1"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MCU_Microchip_ATtiny:ATtiny45V-10SU U1
+U 1 1 6061D61B
+P 4950 3450
+F 0 "U1" H 4420 3496 50  0000 R CNN
+F 1 "ATtiny45V-10SU" H 4420 3405 50  0000 R CNN
+F 2 "Package_SO:SOIJ-8_5.3x5.3mm_P1.27mm" H 4950 3450 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf" H 4950 3450 50  0001 C CNN
+	1    4950 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Relay_SolidState:CPC1017N U2
+U 1 1 6061ED00
+P 6800 4850
+F 0 "U2" H 6800 5175 50  0000 C CNN
+F 1 "CPC1014N" H 6800 5084 50  0000 C CNN
+F 2 "Package_SO:SOP-4_3.8x4.1mm_P2.54mm" H 6600 4650 50  0001 L CIN
+F 3 "https://www.ixysic.com/home/pdfs.nsf/www/CPC1014N.pdf/$file/CPC1014N.pdf" H 6750 4850 50  0001 L CNN
+	1    6800 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:AVR-ISP-6 J1
+U 1 1 6062080C
+P 5150 5000
+F 0 "J1" H 4821 5096 50  0000 R CNN
+F 1 "AVR-ISP-6" H 4821 5005 50  0000 R CNN
+F 2 "" V 4900 5050 50  0001 C CNN
+F 3 " ~" H 3875 4450 50  0001 C CNN
+	1    5150 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 6062304F
+P 6650 3250
+F 0 "D1" H 6643 2995 50  0000 C CNN
+F 1 "LED" H 6643 3086 50  0000 C CNN
+F 2 "" H 6650 3250 50  0001 C CNN
+F 3 "~" H 6650 3250 50  0001 C CNN
+	1    6650 3250
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:VCC #PWR03
+U 1 1 606281D2
+P 4950 2650
+F 0 "#PWR03" H 4950 2500 50  0001 C CNN
+F 1 "VCC" H 4965 2823 50  0000 C CNN
+F 2 "" H 4950 2650 50  0001 C CNN
+F 3 "" H 4950 2650 50  0001 C CNN
+	1    4950 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5550 3650 5850 3650
+Wire Wire Line
+	5850 3650 5850 5100
+Wire Wire Line
+	5850 5100 5550 5100
+$Comp
+L power:VCC #PWR05
+U 1 1 6062E498
+P 5050 4500
+F 0 "#PWR05" H 5050 4350 50  0001 C CNN
+F 1 "VCC" H 5065 4673 50  0000 C CNN
+F 2 "" H 5050 4500 50  0001 C CNN
+F 3 "" H 5050 4500 50  0001 C CNN
+	1    5050 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR06
+U 1 1 6062F3F6
+P 5050 5400
+F 0 "#PWR06" H 5050 5150 50  0001 C CNN
+F 1 "GND" H 5055 5227 50  0000 C CNN
+F 2 "" H 5050 5400 50  0001 C CNN
+F 3 "" H 5050 5400 50  0001 C CNN
+	1    5050 5400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5550 5000 5950 5000
+Wire Wire Line
+	5950 5000 5950 3350
+Wire Wire Line
+	5950 3350 5550 3350
+Wire Wire Line
+	5550 4900 6050 4900
+Wire Wire Line
+	6050 4900 6050 3150
+Wire Wire Line
+	6050 3150 5550 3150
+Wire Wire Line
+	5550 4800 5750 4800
+Wire Wire Line
+	5750 4800 5750 3250
+Wire Wire Line
+	5750 3250 5550 3250
+$Comp
+L power:GND #PWR09
+U 1 1 6063407C
+P 6800 3250
+F 0 "#PWR09" H 6800 3000 50  0001 C CNN
+F 1 "GND" H 6805 3077 50  0000 C CNN
+F 2 "" H 6800 3250 50  0001 C CNN
+F 3 "" H 6800 3250 50  0001 C CNN
+	1    6800 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 60636CE5
+P 6350 4750
+F 0 "R3" V 6143 4750 50  0000 C CNN
+F 1 "680" V 6234 4750 50  0000 C CNN
+F 2 "" V 6280 4750 50  0001 C CNN
+F 3 "~" H 6350 4750 50  0001 C CNN
+	1    6350 4750
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 6063E421
+P 6350 3250
+F 0 "R2" V 6143 3250 50  0000 C CNN
+F 1 "1k" V 6234 3250 50  0000 C CNN
+F 2 "" V 6280 3250 50  0001 C CNN
+F 3 "~" H 6350 3250 50  0001 C CNN
+	1    6350 3250
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5750 3250 6200 3250
+Connection ~ 5750 3250
+Wire Wire Line
+	5550 3450 6200 3450
+Text Notes 5250 5400 0    50   ~ 0
+ISP Interface
+Text GLabel 3400 2700 0    50   Input ~ 0
+Cell+
+$Comp
+L Device:R R1
+U 1 1 6064C02B
+P 3650 2700
+F 0 "R1" V 3443 2700 50  0000 C CNN
+F 1 "0.39" V 3534 2700 50  0000 C CNN
+F 2 "" V 3580 2700 50  0001 C CNN
+F 3 "~" H 3650 2700 50  0001 C CNN
+	1    3650 2700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3400 2700 3500 2700
+Wire Wire Line
+	4950 2700 4950 2850
+Wire Wire Line
+	4950 2700 4950 2650
+Connection ~ 4950 2700
+$Comp
+L power:GND #PWR04
+U 1 1 6064D3B0
+P 4950 4050
+F 0 "#PWR04" H 4950 3800 50  0001 C CNN
+F 1 "GND" H 4955 3877 50  0000 C CNN
+F 2 "" H 4950 4050 50  0001 C CNN
+F 3 "" H 4950 4050 50  0001 C CNN
+	1    4950 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 6064DB15
+P 4250 2850
+F 0 "C2" H 4365 2896 50  0000 L CNN
+F 1 "100n" H 4365 2805 50  0000 L CNN
+F 2 "" H 4288 2700 50  0001 C CNN
+F 3 "~" H 4250 2850 50  0001 C CNN
+	1    4250 2850
+	1    0    0    -1  
+$EndComp
+Connection ~ 4250 2700
+Wire Wire Line
+	4250 2700 4950 2700
+$Comp
+L power:GND #PWR02
+U 1 1 60652086
+P 4250 3000
+F 0 "#PWR02" H 4250 2750 50  0001 C CNN
+F 1 "GND" H 4255 2827 50  0000 C CNN
+F 2 "" H 4250 3000 50  0001 C CNN
+F 3 "" H 4250 3000 50  0001 C CNN
+	1    4250 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 6065247F
+P 3900 3000
+F 0 "#PWR01" H 3900 2750 50  0001 C CNN
+F 1 "GND" H 3905 2827 50  0000 C CNN
+F 2 "" H 3900 3000 50  0001 C CNN
+F 3 "" H 3900 3000 50  0001 C CNN
+	1    3900 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 60652879
+P 6750 3900
+F 0 "R4" H 6820 3946 50  0000 L CNN
+F 1 "22k" H 6820 3855 50  0000 L CNN
+F 2 "" V 6680 3900 50  0001 C CNN
+F 3 "~" H 6750 3900 50  0001 C CNN
+	1    6750 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6200 3450 6200 4750
+$Comp
+L power:GND #PWR08
+U 1 1 6065D97F
+P 6750 4050
+F 0 "#PWR08" H 6750 3800 50  0001 C CNN
+F 1 "GND" H 6755 3877 50  0000 C CNN
+F 2 "" H 6750 4050 50  0001 C CNN
+F 3 "" H 6750 4050 50  0001 C CNN
+	1    6750 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5550 3550 6750 3550
+Wire Wire Line
+	6750 3550 6750 3750
+$Comp
+L Transistor_FET:IRLML0030 Q1
+U 1 1 6065EFA4
+P 7200 3550
+F 0 "Q1" H 7404 3596 50  0000 L CNN
+F 1 "IRLML0030" H 7404 3505 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 7400 3475 50  0001 L CIN
+F 3 "https://www.infineon.com/dgdl/irlml0030pbf.pdf?fileId=5546d462533600a401535664773825df" H 7200 3550 50  0001 L CNN
+	1    7200 3550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6750 3550 7000 3550
+Connection ~ 6750 3550
+$Comp
+L power:GND #PWR010
+U 1 1 60665130
+P 7300 4050
+F 0 "#PWR010" H 7300 3800 50  0001 C CNN
+F 1 "GND" H 7305 3877 50  0000 C CNN
+F 2 "" H 7300 4050 50  0001 C CNN
+F 3 "" H 7300 4050 50  0001 C CNN
+	1    7300 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7300 3750 7300 4050
+$Comp
+L Device:R R5
+U 1 1 60665E1E
+P 7300 3050
+F 0 "R5" H 7370 3096 50  0000 L CNN
+F 1 "10" H 7370 3005 50  0000 L CNN
+F 2 "" V 7230 3050 50  0001 C CNN
+F 3 "~" H 7300 3050 50  0001 C CNN
+	1    7300 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R6
+U 1 1 606665D5
+P 7550 3050
+F 0 "R6" H 7620 3096 50  0000 L CNN
+F 1 "10" H 7620 3005 50  0000 L CNN
+F 2 "" V 7480 3050 50  0001 C CNN
+F 3 "~" H 7550 3050 50  0001 C CNN
+	1    7550 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 3200 7300 3200
+Wire Wire Line
+	7300 3200 7300 3350
+Connection ~ 7300 3200
+Wire Wire Line
+	7550 2900 7300 2900
+Wire Wire Line
+	7300 2900 7300 2700
+Wire Wire Line
+	7300 2700 4950 2700
+Connection ~ 7300 2900
+$Comp
+L power:GND #PWR07
+U 1 1 60668235
+P 6500 4950
+F 0 "#PWR07" H 6500 4700 50  0001 C CNN
+F 1 "GND" H 6505 4777 50  0000 C CNN
+F 2 "" H 6500 4950 50  0001 C CNN
+F 3 "" H 6500 4950 50  0001 C CNN
+	1    6500 4950
+	1    0    0    -1  
+$EndComp
+Text GLabel 3400 4050 0    50   Input ~ 0
+Cell-
+Text GLabel 7350 4750 2    50   Input ~ 0
+LoopUp
+Text GLabel 7350 4950 2    50   Input ~ 0
+LoopDown
+Wire Wire Line
+	7100 4750 7350 4750
+Wire Wire Line
+	7100 4950 7350 4950
+Wire Wire Line
+	3400 4050 4950 4050
+Connection ~ 4950 4050
+$Comp
+L Device:CP C1
+U 1 1 6067B481
+P 3900 2850
+F 0 "C1" H 4018 2896 50  0000 L CNN
+F 1 "10µ" H 4018 2805 50  0000 L CNN
+F 2 "" H 3938 2700 50  0001 C CNN
+F 3 "~" H 3900 2850 50  0001 C CNN
+	1    3900 2850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3800 2700 3900 2700
+Connection ~ 3900 2700
+Wire Wire Line
+	3900 2700 4250 2700
+Text Notes 3150 2400 0    50   ~ 0
+R1: The documentation claims that this is \nactually a PTC resettable fuse, but the part \nmeasures as a simple 0.39 Ohm resistor.\n
+Text Notes 7400 3850 0    50   ~ 0
+Actual component \nused is unknown.
+$EndSCHEMATC
