@@ -147,7 +147,7 @@ The balancing shunt consists of two parallel 10 $\Omega$  resistors (effectively
 The actual MOSFET driver for the balancing shunt is unknown, any "digital compatible" type with the following specification should work:
 
 - maximum drain-source on-resistance $R_{DS(on max)} \lesssim 0.04 \, \Omega$
-- gate threshold voltage $V_{GS(th)} \gtrsim 2 \, V$
+- gate threshold voltage $V_{GS(th)} \lesssim 2 \, V$
 - drain source voltage $V_{DS} \gtrsim 10 \, V$
 - continuous drain current $I_D \gtrsim 2 \, A$
 - maximum power dissipation $P_D \gtrsim 0.2 \, W$ (calculate according to maximum $R_{DS(on)}$)
