@@ -33,6 +33,14 @@ The source code can be built with [PlatformIO](https://platformio.org/).
 
 Install the firmware via an ISP, e. g. an ASPUSB.
 
+### Fuse settings
+
+Set the fuses to `LFuse: 0x62`, `HFuse: 0xde`, `EFuse: 0xff`:
+
+- brownout detection enabled at $V_{CC}$ = 1.8 V
+- internal clock 8 MHz, startup time PWRDOWN/RESET: 6 CK/14 CK + 64 ms
+- divide clock by 8
+
 ### Calibration
 
 It is recommended to calibrate the software to accomodate for ATTiny tolerances before flashing the final firmware of a module.
