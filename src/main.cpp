@@ -234,6 +234,10 @@ void determine_cellstate() {
   if ((cellstate == e_CellLVC) && (cellvoltage > c_LVoltage_disengage))
     cellstate_new = e_CellNorm;
 
+  // special case: after bootup the cell state is invalid, make sure we leave that state
+  if ((cellstate == e_CellInvalid) && (cellvoltage > c_LVoltage_engage) && (cellvoltage < c_HVoltage_engage))
+    cellstate_new = e_CellNorm;
+
   if ((cellvoltage > c_LVoltage_disengage) && (cellvoltage < c_HVoltage_disengage))
     cellstate_new = e_CellNorm; // final decision
 
