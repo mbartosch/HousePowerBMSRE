@@ -35,7 +35,7 @@
 // NOTE: Calibration is for one particular ATTiny processor and must be repeated for each module to be deployed!
 
 // enable debugging console output on PB2/Pin 7 (may require ATTTiny85 due to flash size requirements)
-#define DEBUG
+// #define DEBUG
 
 //////////////////////////////////////////////////////////////////////////
 // USER CONFIGURATION
@@ -49,14 +49,14 @@ const unsigned long calibration_voltage_software = 3200;
 
 // ONLY CHANGE THE BELOW VALUES IF YOU KNOW WHAT YOU ARE DOING
 // cell module voltage thresholds (in mV)
-const long c_LVoltage_engage    = 2900L;
-const long c_LVoltage_disengage = 3100L;
-const long c_HVoltage_engage    = 3600L;
-const long c_HVoltage_disengage = 3450L;
+const int c_LVoltage_engage    = 2900L;
+const int c_LVoltage_disengage = 2950L;
+const int c_HVoltage_engage    = 3600L;
+const int c_HVoltage_disengage = 3550L;
 
 // shunting thresholds
-const long c_ShuntVoltage_engage    = 3500L;
-const long c_ShuntVoltage_disengage = 3450L;
+const int c_ShuntVoltage_engage    = 3500L;
+const int c_ShuntVoltage_disengage = 3450L;
 
 // number of voltage measurements to average
 const byte c_MovingAverageWindow = 5;
@@ -475,7 +475,7 @@ void loop() {
   // just show a hint that something's going on, should 
   // not cause too much voltage drop to confuse an external volt meter
   LED_ON;
-  delay(3);
+  delay(20);
   LED_OFF;
 
   // initialize Port B: configure all pins as INPUT to save power
