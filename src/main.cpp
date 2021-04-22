@@ -99,7 +99,7 @@ long cellvoltage = 3200;
 #define LOOP_CLOSE PORTB |=  (1 << PIN_LOOP)
 #define LOOP_OPEN  PORTB &= ~(1 << PIN_LOOP)
 
-#if defined DEBUG || defined CALIBRATION_MODE
+#ifdef DEBUG
   #define PIN_TX        PIN_AUX
   #include <SoftwareSerial.h>
   SoftwareSerial mySerial(-1, PIN_TX);  //rx, tx
@@ -315,20 +315,51 @@ void deep_sleep(byte duration) {
   ADCSRA |= _BV(ADEN);
 }
 
+// blinks argument as 4 digit hex number
+// signal 4 bit per digit
+//   1 is encoded as two short flashes
+//   0 is encoded as one short flash
+// digits separated by a longer pause
+void blink_int(unsigned int arg) {
+  // start with a long burst of rapid flashes to indicate start of sequence
+  for (byte ii = 0; ii < 20; ii++) {
+    LED_ON;
+    delay(10);
+    LED_OFF;
+    delay(50);
+  }
+  deep_sleep(WD_TIMEOUT_1000ms);
+
+  // send BCD encoded decimal digits of the supplied argument
+  // maximum number 4 digit BCD can handle
+
+  for (char p = 3; p >=0; p--) {
+    byte digit = (arg >> (p * 4)) & 0x0f;
+    for (char bit = 3; bit >= 0; bit--) {
+      LED_ON;
+      delay(50);
+      LED_OFF;
+      delay(200);
+      if ((digit & (1 << bit)) > 0) {
+        LED_ON;
+        delay(50);
+        LED_OFF;
+        delay(200);
+      } else {
+        delay(250);
+      }
+      deep_sleep(WD_TIMEOUT_1000ms);
+    }
+    deep_sleep(WD_TIMEOUT_2000ms);
+  }
+
+}
+
 void setup() {
-#if defined DEBUG || defined CALIBRATION_MODE
+#ifdef DEBUG
   // serial debugging
   mySerial.begin(9600);
   debugln();
-#endif
-
-#ifdef CALIBRATION_MODE
-  debugln("Calibration mode");
-
-  debug("Calibration factor default: ");
-  debugln(calibration_factor_default);
-  debug("Calibration factor custom: ");
-  debugln(calibration_factor_custom);
 #endif
 
   // initialize Port B: configure all pins as OUTPUT
@@ -337,10 +368,28 @@ void setup() {
   // set all outputs to LOW (LED off, Shunt off, Loop open)
   PORTB = 0b00000000;
 
+#ifdef CALIBRATION_MODE
+  #ifdef DEBUG
+  debugln("Calibration mode");
+
+  debug("Calibration factor default: ");
+  debugln(calibration_factor_default);
+  debug("Calibration factor custom: ");
+  debugln(calibration_factor_custom);
+  #endif
+
+  delay(5);
+  // initialize moving average with current ADC value
+  for (byte ii = 0; ii < c_MovingAverageWindow; ii++) {
+    avg_buffer[ii] = readADC();
+    delay(5);
+  }
+#else
   // initialize moving average with nominal value
   for (byte ii = 0; ii < c_MovingAverageWindow; ii++) {
     avg_buffer[ii] = 3200;
   }
+#endif
 
   last_cutoff_age = 0;
 }
@@ -465,18 +514,16 @@ void loop() {
   // calibration mode
   delayMicroseconds(200);
   long adc_value = moving_average(readADC());
-  debug("Vcc (uncalibrated): ");
-  debug(calibration_factor_default / adc_value);
-  debug(" Vcc (calibrated): ");
-  debug(calibration_factor_custom / adc_value);
-  debug(" adc averaged value: ");
-  debug(adc_value);
-  debugln("");
-  // just show a hint that something's going on, should 
-  // not cause too much voltage drop to confuse an external volt meter
-  LED_ON;
-  delay(20);
-  LED_OFF;
+  #ifdef DEBUG
+   debug("Vcc (uncalibrated): ");
+   debug(calibration_factor_default / adc_value);
+   debug(" Vcc (calibrated): ");
+   debug(calibration_factor_custom / adc_value);
+   debug(" adc averaged value: ");
+   debug(adc_value);
+   debugln("");
+  #endif
+  blink_int(calibration_factor_default / adc_value);
 
   // initialize Port B: configure all pins as INPUT to save power
   DDRB  = 0b00000000;

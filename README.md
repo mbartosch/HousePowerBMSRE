@@ -27,6 +27,8 @@ The [documentation of the BMS is still available for download](http://cleanpower
 
 ## Part 1: OpenSource cell module replacement firmware
 
+**NOTE on chip types (ATTiny45V vs ATTiny85V):** After initial successful testing with an ATTiny85 it became apparent that using software serial on the ATTiny45 is not possible for some reason. The firmware locks up when printing on the serial console. This means that DEBUG mode is not available on the ATTiny45. To calibrate the module use the "bit blinking" calibration mode instead.
+
 ### Compilation and deployment
 
 The source code can be built with [PlatformIO](https://platformio.org/).
@@ -47,17 +49,53 @@ Set the processor fuses to `LFuse: 0x62`, `HFuse: 0xde`, `EFuse: 0xff`:
 
 It is recommended to calibrate the software to accomodate for ATTiny tolerances before flashing the final firmware of a module.
 
+#### Using "bit blinking"
+
+In this calibration mode the device blinks a bit pattern indicating the measured voltage of the ADC in mV as a binary pattern without applying any calibration factor.
+
+Use this mode for ATTiny45 chips where a serial console is not available.
+
+This must be done *for each individual module*:
+
+- compile and deploy this source with `CALIBRATION_MODE` enabled and `DEBUG` disabled
+- attach stable voltage source to cell board Vcc, voltage should be about 3.1 - 3.4 V
+- attach a precise volt meter as close as possible to Vcc/GND of cell board
+- **wait at least 8 seconds before taking measurements (allow averaging filter to settle)**
+- take voltage reading on volt meter, note as "voltage metered"
+- observe the LED blinking pattern (see below), convert observed binary value to decimal, note as "voltage software"
+- insert these two values (measured in mV) in the below constants `calibration_voltage_metered` and `calibration_voltage_software`
+- disable (comment out) `CALIBRATION_MODE` (and `DEBUG)`
+- compile and deploy the calibrated source to this particular cell module
+
+##### The blinking pattern
+
+In a repeating cycle the CPU sends 16 bits of data in four groups of four bits, MSB first.
+
+- the sequence starts with a rapid flashing pattern.
+- a logical "0" is signaled by a single short flash
+- a logical "1" is signaled by a double short flash
+
+Write down all bits of the sequence and convert to decimal.
+
+Example:
+
+0000 1101 0110 1010 converts to 3434.
+
+#### Using the serial console
+
+**NOTE:** This mode is only available when using an ATTiny85. Use "bit blinking" instead for the ATTiny45.
+
 This must be done *for each individual module*:
 
 - attach RXD of a terminal program on the host computer (9600 Baud 8N1) to PB2 (pin 7) of the ATTiny
-- compile and deploy this source with `CALIBRATION_MODE` enabled
+- compile and deploy this source with `CALIBRATION_MODE` and `DEBUG` enabled
 - attach stable voltage source to cell board Vcc, voltage should be about 3.1 - 3.4 V
 - attach a precise volt meter as close as possible to Vcc/GND of cell board
 - **wait at least 8 seconds before taking measurements (allow averaging filter to settle)**
 - take voltage reading on volt meter, note as "voltage metered"
 - check value of "Vcc (uncalibrated)" output on the terminal console, note as "voltage software"
 - insert these two values (measured in mV) in the below constants `calibration_voltage_metered` and `calibration_voltage_software`
-- disable (comment out) `CALIBRATION_MODE`
+- disable (comment out) `CALIBRATION_MODE` and `DEBUG`
 - compile and deploy the calibrated source to this particular cell module
 
 #### Configuration
@@ -78,12 +116,12 @@ const unsigned long calibration_voltage_software = 3200;
 // ONLY CHANGE THE BELOW VALUES IF YOU KNOW WHAT YOU ARE DOING
 // cell module voltage thresholds (in mV)
 const long c_LVoltage_engage    = 2900L;
-const long c_LVoltage_disengage = 3100L;
+const long c_LVoltage_disengage = 2950L;
 const long c_HVoltage_engage    = 3600L;
-const long c_HVoltage_disengage = 3450L;
+const long c_HVoltage_disengage = 3550L;
 
 // shunting thresholds
-const long c_ShuntVoltage_engage = 3500L;
+const long c_ShuntVoltage_engage    = 3500L;
 const long c_ShuntVoltage_disengage = 3450L;
 
 // number of voltage measurements to average
@@ -104,9 +142,9 @@ const unsigned int c_RecentCutOffDuration = 30 * 60;
 | `calibration_voltage_metered`  | 3200    | Voltage in mV measured in calibration mode between Vcc and GND |
 | `calibration_voltage_software` | 3200    | Uncalibrated voltage in mV reported by the module in calibration mode |
 | `c_LVoltage_engage`            | 2900L   | LVC enable voltage in mV                                     |
-| `c_LVoltage_disengage`         | 3100L   | LVC disable voltage in mV (must be higher than `c_LVoltage_engage`) |
+| `c_LVoltage_disengage`         | 2950L   | LVC disable voltage in mV (must be higher than `c_LVoltage_engage`) |
 | `c_HVoltage_engage`            | 3600L   | HVC enable voltage in mV                                     |
-| `c_HVoltage_disengage`         | 3450L   | HVC disable voltage in mV (must be lower than `c_HVoltage_engage`) |
+| `c_HVoltage_disengage`         | 3550L   | HVC disable voltage in mV (must be lower than `c_HVoltage_engage`) |
 | `c_ShuntVoltage_engage`        | 3500L   | Shunting enable voltage in mV                                |
 | `c_ShuntVoltage_disengage`     | 3450L   | Shunting disable voltage in mV (must be lower than `c_ShuntVoltage_engage`) |
 | `c_MovingAverageWindow`        | 5       | Moving average window for voltage measurements (number of measurements) |
@@ -116,6 +154,8 @@ const unsigned int c_RecentCutOffDuration = 30 * 60;
 ### Operation
 
 Similar to the original device, see the original documentation.
+
+**NOTE:** When this firmware starts up it sends a LED blinking pattern of about 15 short flashes. This allows to distinguish a module with the OpenSource firmware from the original modules which immediately go into the "slow flash" mode.
 
 ## Part 2: Reverse engineering of the original cell module hardware and firmware
 
@@ -229,11 +269,11 @@ NOTE: if a HVC or LVC condition (including power-up event) has occurred within t
 
 Condition for entering this state:
 
-- $V_{CC}$ is measured lower than 2.9 V
+- $V_{CC}$ is measured lower than about 2.8 V (measured, contradicts documentation)
 
 Condition for leaving this state:
 
-- $V_{CC}$ is measured higher than 3.1 V
+- $V_{CC}$ is measured higher than 2.8 V (measured, contradicts documentation which claims that LVC is maintained until exceeding 3.1 V)
 
 In this mode the cell module signals a cutoff condition to the Mini BMS main module by switching off the cell loop solid state relay  and thus cutting the loop current:
 
@@ -248,8 +288,8 @@ The device wakes up periodically (presumably about once a second), probes $V_{CC
 
 Condition for entering this state:
 
-- $V_{CC}$ is measured higher than 3.55 V
-- $V_{CC}$ is measured lower than 3.65 V
+- $V_{CC}$ is measured higher than about 3.6 V (measured, contradicts documentation)
+- $V_{CC}$ is measured lower than about 3.6 V (measured, contradicts documentation)
 
 In this mode the cell module periodically enables the shunt resistor in order to dissipate charge current.
 
@@ -269,7 +309,7 @@ Condition for entering this state:
 
 Condition for leaving this state:
 
-- $V_{CC}$ is measured lower than 3.45 V
+- $V_{CC}$ is measured lower than 3.65 V (contradicts documentation which claims that HVC is kept active unless cell voltage is lower than 3.45 V)
 
 In this mode the cell module periodically enables the shunt resistor in order to dissipate charge current.
 
